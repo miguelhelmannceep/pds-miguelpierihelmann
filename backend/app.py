@@ -123,7 +123,7 @@ def criar_pet():
     if not dados or any(campo not in dados for campo in campos):
         return jsonify({"erro": "Informe nome, especie, idade e dono_id"}), 400
 
-    # Desafio: Verifica se o dono existe no banco antes de cadastrar o pet
+    # Desafio da aula: valida se o dono existe
     dono = db.session.get(Dono, dados["dono_id"])
     if dono is None:
         return jsonify({"erro": "Dono nao encontrado"}), 404
