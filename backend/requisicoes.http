@@ -1,19 +1,28 @@
 ### Listar todos os donos
 GET http://localhost:5000/donos
 
-### Buscar um dono pelo id (com a chave pets inclusa - Desafio Ex. 3)
+### Buscar um dono pelo id (com a lista de pets)
 GET http://localhost:5000/donos/1
 
-### Listar os pets de um dono especifico (Exercicio 2)
+### Listar os pets de um dono especifico
 GET http://localhost:5000/donos/1/pets
 
-### Cadastrar um novo dono
+### Cadastrar um novo dono (Válido)
 POST http://localhost:5000/donos
 Content-Type: application/json
 
 {
     "nome": "Diego Souza",
     "telefone": "45999110004"
+}
+
+### Cadastrar dono com dados inválidos (Deve retornar 400)
+POST http://localhost:5000/donos
+Content-Type: application/json
+
+{
+    "nome": "",
+    "telefone": "   "
 }
 
 ### Atualizar um dono
@@ -32,16 +41,16 @@ DELETE http://localhost:5000/donos/3
 ### ROTAS DE PETS
 ### ----------------------------------------------------------
 
-### Listar todos os pets (com o nome do dono)
+### Listar todos os pets
 GET http://localhost:5000/pets
 
-### Listar apenas os pets de um dono (filtro por query param)
+### Listar apenas os pets de um dono (query param)
 GET http://localhost:5000/pets?dono_id=1
 
 ### Buscar um pet pelo id
 GET http://localhost:5000/pets/1
 
-### Cadastrar um novo pet
+### Cadastrar um novo pet (Válido)
 POST http://localhost:5000/pets
 Content-Type: application/json
 
@@ -49,6 +58,50 @@ Content-Type: application/json
     "nome": "Bidu",
     "especie": "cachorro",
     "idade": 2,
+    "dono_id": 1
+}
+
+### [TESTE DE ERRO 1] Idade em formato de texto (Deve retornar 400)
+POST http://localhost:5000/pets
+Content-Type: application/json
+
+{
+    "nome": "Rex",
+    "especie": "cachorro",
+    "idade": "dois",
+    "dono_id": 1
+}
+
+### [TESTE DE ERRO 2] Idade negativa (Deve retornar 400)
+POST http://localhost:5000/pets
+Content-Type: application/json
+
+{
+    "nome": "Rex",
+    "especie": "cachorro",
+    "idade": -5,
+    "dono_id": 1
+}
+
+### [TESTE DE ERRO 3] dono_id inexistente (Deve retornar 400)
+POST http://localhost:5000/pets
+Content-Type: application/json
+
+{
+    "nome": "Rex",
+    "especie": "cachorro",
+    "idade": 3,
+    "dono_id": 999
+}
+
+### [TESTE DE ERRO 4] Nome vazio (Deve retornar 400)
+POST http://localhost:5000/pets
+Content-Type: application/json
+
+{
+    "nome": "   ",
+    "especie": "gato",
+    "idade": 1,
     "dono_id": 1
 }
 
