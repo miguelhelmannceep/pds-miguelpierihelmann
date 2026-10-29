@@ -1,8 +1,11 @@
 ### Listar todos os donos
 GET http://localhost:5000/donos
 
-### Buscar um dono pelo id
+### Buscar um dono pelo id (com a chave pets inclusa - Desafio Ex. 3)
 GET http://localhost:5000/donos/1
+
+### Listar os pets de um dono especifico (Exercicio 2)
+GET http://localhost:5000/donos/1/pets
 
 ### Cadastrar um novo dono
 POST http://localhost:5000/donos
