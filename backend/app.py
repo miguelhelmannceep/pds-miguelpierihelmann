@@ -7,6 +7,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///petshop.db"
 
 db = SQLAlchemy(app)
 
+
 class Dono(db.Model):
     __tablename__ = "donos"
 
@@ -43,6 +44,11 @@ class Pet(db.Model):
             "dono_nome": self.dono.nome
         }
 
+
+# ----------------------------------------------------------
+# ROTAS DE DONOS
+# ----------------------------------------------------------
+
 @app.route("/donos", methods=["GET"])
 def listar_donos():
     donos = Dono.query.all()
@@ -54,7 +60,21 @@ def buscar_dono(dono_id):
     dono = db.session.get(Dono, dono_id)
     if dono is None:
         return jsonify({"erro": "Dono nao encontrado"}), 404
-    return jsonify(dono.to_dict())
+
+    # Exercício 3 (Desafio): adiciona a lista de pets no JSON do dono
+    dados = dono.to_dict()
+    dados["pets"] = [pet.to_dict() for pet in dono.pets]
+    return jsonify(dados)
+
+
+# Exercício 2: Rota que lista os pets de um dono específico
+@app.route("/donos/<int:dono_id>/pets", methods=["GET"])
+def listar_pets_do_dono(dono_id):
+    dono = db.session.get(Dono, dono_id)
+    if dono is None:
+        return jsonify({"erro": "Dono nao encontrado"}), 404
+
+    return jsonify([pet.to_dict() for pet in dono.pets])
 
 
 @app.route("/donos", methods=["POST"])
@@ -98,6 +118,11 @@ def remover_dono(dono_id):
 
     return jsonify({"mensagem": "Dono removido com sucesso"})
 
+
+# ----------------------------------------------------------
+# ROTAS DE PETS
+# ----------------------------------------------------------
+
 @app.route("/pets", methods=["GET"])
 def listar_pets():
     dono_id = request.args.get("dono_id")
@@ -123,7 +148,6 @@ def criar_pet():
     if not dados or any(campo not in dados for campo in campos):
         return jsonify({"erro": "Informe nome, especie, idade e dono_id"}), 400
 
-    # Desafio da aula: valida se o dono existe
     dono = db.session.get(Dono, dados["dono_id"])
     if dono is None:
         return jsonify({"erro": "Dono nao encontrado"}), 404
